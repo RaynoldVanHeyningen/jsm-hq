@@ -141,7 +141,7 @@ Windows 11 support is experimental. Run HQ in PowerShell or Windows Terminal, no
 - There's no tmux, so HQ runs the agents itself. **Agents stop when HQ stops.** Their sandboxes and folders are kept; press **Start** to run them again.
 - Use the terminal in the agent's drawer; there's no `tmux attach`.
 - In Local mode, the agent's env file isn't loaded. Use Sandbox mode for app variables.
-- A sandboxed agent's clone uses LF line endings, whatever your git's `core.autocrlf` says, because the sandbox runs Linux. HQ doesn't change a folder you picked for an agent yourself: if git shows every file as changed inside the sandbox, run `git config core.autocrlf input` in that folder.
+- A sandboxed agent's clone uses LF line endings, whatever your git's `core.autocrlf` says, because the sandbox runs Linux. A clone from an older HQ keeps its CRLF files until they're checked out again: git handles them correctly, but if a script won't run, use `rm <file> && git checkout <file>` in the Shell tab. HQ doesn't change a folder you picked for an agent yourself: if git shows every file as changed inside the sandbox, run `git config core.autocrlf input` in that folder.
 
 ## Keyboard shortcuts
 
