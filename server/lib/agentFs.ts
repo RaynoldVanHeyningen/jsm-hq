@@ -45,11 +45,11 @@ export function agentWrite(root: string, rel: string, data: string, opts?: Write
 }
 
 /** Reads a file inside the agent's folder; a missing file or a symlink reads as null. */
-export function agentRead(root: string, rel: string): string | null {
+export function agentRead(root: string, rel: string, encoding: BufferEncoding = "utf8"): string | null {
   const abs = agentPath(root, rel);
   const st = lstat(abs);
   if (!st || st.isSymbolicLink() || !st.isFile()) return null;
-  return readFileSync(abs, "utf8");
+  return readFileSync(abs, encoding);
 }
 
 /** Deletes a path inside the agent's folder (a symlink itself, never its target). */
