@@ -114,7 +114,7 @@ export class Sessions {
         if (skills.error) hub.activity("session", id, `${agent.name}: some agent skills didn't install (${skills.error.slice(0, 120)}). Starting anyway.`);
       }
       if (!(await this.backend.exists(name))) {
-        const launch = adapter.launch(agent, dir);
+        const launch = adapter.launch(agent);
         const envFile = this.envFileFor(id);
         // Local mode: the agent gets the env file's variables (tmux only: there's no shell to load them into otherwise).
         let spec: LaunchSpec = { file: localBinary[agent.cli], args: launch.args, envFile };

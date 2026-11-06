@@ -15,7 +15,7 @@ export interface Launch {
 export interface CliAdapter {
   /** Writes HQ's files into the agent's folder (all git-excluded). */
   writeFiles(dir: string, agent: AgentConfig, cfg: HqConfig, token: string, extras?: RoleExtras): Promise<void>;
-  launch(agent: AgentConfig, dir: string): Launch;
+  launch(agent: AgentConfig): Launch;
 }
 
 // ---------------------------------------------------------------- Claude Code
@@ -25,11 +25,13 @@ const claude: CliAdapter = {
     const ownRole = await adoptRoleFile(dir);
     writeClaudeFiles(dir, agent, cfg, token, { ...extras, ownRole });
   },
-  launch(agent, dir) {
+  launch(agent) {
     // "Opus" / "Sonnet" / "Haiku" → Claude Code's aliases; anything else is passed as a full model id.
     const m = agent.model.trim();
     const model = !m || /^default$/i.test(m) ? null : /^(opus|sonnet|haiku)$/i.test(m) ? m.toLowerCase() : m;
-    return { sbxAgent: "claude", args: ["--mcp-config", `${dir}/${MCP_CONFIG}`, ...(model ? ["--model", model] : [])] };
+    // Relative to the agent's folder, where it starts. An absolute path would be the host's, and on
+    // Windows the folder has a different path inside the sandbox (C:\x on the host, /c/x in the sandbox).
+    return { sbxAgent: "claude", args: ["--mcp-config", MCP_CONFIG, ...(model ? ["--model", model] : [])] };
   },
 };
 
